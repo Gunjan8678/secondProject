@@ -21,6 +21,9 @@ import {
   View,
 } from 'react-native';
 
+import GoalItems from './components/GoalItems';
+import GoalInput from './components/GoalInput';
+
 import {
   Colors,
   DebugInstructions,
@@ -62,41 +65,23 @@ const App = () => {
     backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
   };
 
-  const [enteredText, setEnteredText] = useState('');
   const [courseGoals, setCourseGoals] = useState([]);
 
-  function getTextHandler(enteredText) {
-    setEnteredText(enteredText);
-  }
-
-  const counterGoalsHandler = () => {
-    console.log(enteredText);
+  const counterGoalsHandler = goalText => {
+    // console.log(enteredText);
     setCourseGoals(currentGoals => [
       ...currentGoals,
-      {key: Math.random().toString(), value: enteredText},
+      {key: Math.random().toString(), value: goalText},
     ]);
   };
 
   return (
     <View>
-      <View style={styles.inputBox}>
-        <TextInput
-          style={styles.input}
-          value={enteredText}
-          onChangeText={getTextHandler}
-          placeholder="Enter text here"
-        />
-        <Button title="ADD" onPress={counterGoalsHandler} />
-      </View>
-
+      <GoalInput onAddGoal={counterGoalsHandler} />
       <FlatList
         keyExtractor={(item, index) => item.key}
         data={courseGoals}
-        renderItem={itemData => (
-          <View style={styles.listItems}>
-            <Text>{itemData.item.value}</Text>
-          </View>
-        )}
+        renderItem={itemData => <GoalItems title={itemData.item.value} />}
       />
     </View>
     // <SafeAreaView style={backgroundStyle}>
@@ -144,24 +129,6 @@ const styles = StyleSheet.create({
   },
   highlight: {
     fontWeight: '700',
-  },
-  inputBox: {
-    padding: 30,
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-  },
-  input: {
-    borderColor: 'black',
-    borderWidth: 1,
-    width: 200,
-  },
-  listItems: {
-    margin: 30,
-    marginVertical: 10,
-    padding: 10,
-    backgroundColor: '#ccc',
-    borderWidth: 1,
-    borderColor: 'black',
   },
 });
 
