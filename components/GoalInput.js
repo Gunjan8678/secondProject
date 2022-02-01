@@ -6,8 +6,13 @@ const GoalInput = props => {
   const [enteredText, setEnteredText] = React.useState('');
 
   function getTextHandler(enteredText) {
+    console.log('text ', enteredText);
     setEnteredText(enteredText);
   }
+  const addGoalAdditionHandler = () => {
+    props.onAddGoal(enteredText);
+    setEnteredText('');
+  };
 
   return (
     <Modal visible={props.visible} animationType="slide">
@@ -18,7 +23,14 @@ const GoalInput = props => {
           onChangeText={getTextHandler}
           placeholder="Enter text here"
         />
-        <Button title="ADD" onPress={props.onAddGoal.bind(this, enteredText)} />
+        <View style={styles.buttonContainer}>
+          <View style={styles.button}>
+            <Button title="CANCEL" color="red" onPress={props.onCancel} />
+          </View>
+          <View style={styles.button}>
+            <Button title="ADD" onPress={addGoalAdditionHandler} />
+          </View>
+        </View>
       </View>
     </Modal>
   );
@@ -33,9 +45,17 @@ const styles = StyleSheet.create({
   input: {
     borderColor: 'black',
     borderWidth: 1,
-    width: 200,
+    width: '80%',
     padding: 10,
     marginBottom: 10,
+  },
+  buttonContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    width: '80%',
+  },
+  button: {
+    width: '40%',
   },
 });
 
