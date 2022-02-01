@@ -16,7 +16,6 @@ import {
   StatusBar,
   StyleSheet,
   Text,
-  TextInput,
   useColorScheme,
   View,
 } from 'react-native';
@@ -66,22 +65,37 @@ const App = () => {
   };
 
   const [courseGoals, setCourseGoals] = useState([]);
+  const [isAddMode, setIsAddMode] = useState(false);
+
+  const removeItemHandler = goalId => {
+    console.log('goalId', goalId);
+    setCourseGoals(currentGoals => {
+      return currentGoals.filter(goal => goal.id != goalId);
+    });
+  };
 
   const counterGoalsHandler = goalText => {
-    // console.log(enteredText);
+    console.log(this, 'enteredGoal', goalText);
     setCourseGoals(currentGoals => [
       ...currentGoals,
-      {key: Math.random().toString(), value: goalText},
+      {id: Math.random().toString(), value: goalText},
     ]);
   };
 
   return (
-    <View>
-      <GoalInput onAddGoal={counterGoalsHandler} />
+    <View style={styles.sectionContainer}>
+      <Button onPress={() => setIsAddMode(true)} title="Add New Goal"></Button>
+      <GoalInput visible={isAddMode} onAddGoal={counterGoalsHandler} />
       <FlatList
-        keyExtractor={(item, index) => item.key}
+        keyExtractor={(item, index) => item.id}
         data={courseGoals}
-        renderItem={itemData => <GoalItems title={itemData.item.value} />}
+        renderItem={itemData => (
+          <GoalItems
+            id={itemData.item.id}
+            onDelete={removeItemHandler}
+            title={itemData.item.value}
+          />
+        )}
       />
     </View>
     // <SafeAreaView style={backgroundStyle}>
@@ -116,19 +130,8 @@ const App = () => {
 
 const styles = StyleSheet.create({
   sectionContainer: {
+    padding: 20,
     paddingHorizontal: 24,
-  },
-  sectionTitle: {
-    fontSize: 24,
-    fontWeight: '600',
-  },
-  sectionDescription: {
-    marginTop: 8,
-    fontSize: 18,
-    fontWeight: '400',
-  },
-  highlight: {
-    fontWeight: '700',
   },
 });
 
